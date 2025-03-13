@@ -3,33 +3,47 @@ import tkinter as tk
 root = tk.Tk()
 root.title("To Do List")
 root.geometry("400x700")
-root.config(cursor="hand2")
+root.grid_rowconfigure(0,minsize=50)
 
 entry = tk.Entry(root)
-entry.pack()
-entry.config(font=("Ariel", 14, "bold"), borderwidth=2, relief="raised")
-def clearPlaceholder():
-    if entry.get() == "Enter task":
+entry.config(font=("Garamond", 18, "bold"), 
+             highlightbackground="grey", 
+             relief="raised", 
+             borderwidth=.1,
+             width=31)
+def clearPlaceholder(event):
+    if entry.get() == "Enter Task":
         entry.delete(0, tk.END)
-entry.insert(0, "Enter task")
+entry.insert(0, "Enter Task")
 entry.bind("<FocusIn>", clearPlaceholder)
+entry.place(x=20,y=10)
 
-
-
-
-print(root.tk.splitlist(root.tk.call("tk", "cursors")))
-
-def addButton():
+rows = 1
+def addButton(event=None):
+    global rows
+    if entry.get() == "" or entry.get() == "Enter Task":
+        return
     label = tk.Label(root, text=entry.get())
-    label.pack()
+
+    label.grid(row=rows,column=0,pady=5,padx=20,sticky="w")
+    rows+=1
+
+    label.config(font=("Garamond", 17), 
+                 fg="White", 
+                 bg="black")
+
+    label.bind("<Enter>", lambda e: label.config(font=("Garamond", 17, "overstrike"), fg="red"))
+    label.bind("<Leave>", lambda e: label.config(font=("Garamond", 17), fg = "white"))
     label.bind("<ButtonRelease-1>", lambda e: label.destroy())
+    
     entry.delete(0, tk.END)
 
 button = tk.Button(root, text="Add", command=addButton)
-button.pack()
-button.bind("<Return>",lambda e: addButton)
-
+button.config(font=("Garamond", 17, "bold"), 
+              highlightbackground="grey", 
+              relief="raised", 
+              borderwidth=1,
+              fg= "black")
+button.place(x=320,y=10)
+root.bind("<Return>", addButton)
 root.mainloop()
-
-#enter triggers the add button
-#dont allow empty tasks
